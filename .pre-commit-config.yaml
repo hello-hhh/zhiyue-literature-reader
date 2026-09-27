@@ -1,0 +1,44 @@
+# .pre-commit-config.yaml — pre-commit hook configuration.
+#
+# Hooks run automatically on every `git commit`.
+# To install: pre-commit install
+# To run manually on all files: pre-commit run --all-files
+#
+# Install pre-commit: pip install pre-commit  (or: pip install -e ".[dev]")
+
+repos:
+  # ── Standard file hygiene ────────────────────────────────────────────────
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace       # remove trailing spaces
+      - id: end-of-file-fixer         # ensure files end with a newline
+      - id: check-yaml                # validate YAML syntax
+      - id: check-json                # validate JSON syntax
+        exclude: "^.devcontainer/"    # devcontainer.json uses JSONC (comments) — not strict JSON
+      - id: check-toml                # validate TOML syntax
+      - id: check-merge-conflict      # block commits with unresolved merge markers
+      - id: debug-statements          # catch accidental breakpoint() / pdb.set_trace()
+
+  # ── Import ordering ──────────────────────────────────────────────────────
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: ["--profile", "black", "--line-length", "120"]
+
+  # ── Linting ──────────────────────────────────────────────────────────────
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.1.1
+    hooks:
+      - id: flake8
+        args:
+          # Only check for serious bugs — not style violations.
+          # E9xx: syntax errors and runtime exceptions
+          # F63x: invalid escape sequences
+          # F7xx: statement errors (undefined names, redefinitions)
+          # F82x: undefined names in annotations
+          # This is the minimal flake8 config recommended for existing codebases.
+          # Style enforcement is handled by isort and code review.
+          - "--select=E9,F63,F7,F82"
+        exclude: "^(obsolete/|huggingface/)"

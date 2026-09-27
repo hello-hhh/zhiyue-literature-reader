@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "zhiyue-literature-reader"
+version = "1.2.2"
+description = "A local personal literature reader for PDF, DOCX, and web pages"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "ollama", "rank-bm25", "chromadb", "streamlit", "requests",
+    "pymupdf", "python-docx", "openpyxl", "xlrd", "python-pptx",
+    "beautifulsoup4", "lxml",
+]
+
+[project.optional-dependencies]
+dev  = ["pytest", "pytest-cov", "pytest-mock", "xlwt", "pre-commit"]
+eval = ["ragas>=0.2.0", "langchain-ollama", "datasets"]
+
+[project.urls]
+Homepage = "https://github.com/anjanatiha/Retrieval-Augmented-Generation-RAG-Agent"
+Demo = "https://huggingface.co/spaces/anjanatiha2024/Rag-Agent"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# "." lets pytest find cli/ and ui/ at the repo root
+# "src" lets pytest find src/rag/* packages
+pythonpath = [".", "src"]
+filterwarnings = [
+    # PyMuPDF uses SWIG C extensions that lack __module__ on Python 3.11+.
+    # This is a third-party library issue — not fixable in our code.
+    "ignore:builtin type.*has no __module__:DeprecationWarning",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

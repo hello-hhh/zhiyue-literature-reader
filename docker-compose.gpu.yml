@@ -1,0 +1,26 @@
+# docker-compose.gpu.yml — NVIDIA GPU override for docker-compose.yml.
+#
+# Passes the host GPU through to the Ollama container so models run on the GPU
+# instead of CPU. Requires the NVIDIA Container Toolkit to be installed on the host.
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.gpu.yml up
+#
+# Prerequisites:
+#   - NVIDIA GPU with drivers installed
+#   - NVIDIA Container Toolkit: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html
+#
+# Verify the GPU is visible inside the container:
+#   docker compose -f docker-compose.yml -f docker-compose.gpu.yml run --rm ollama nvidia-smi
+
+services:
+  ollama:
+    deploy:
+      resources:
+        reservations:
+          devices:
+            # Pass all available NVIDIA GPUs to the Ollama container.
+            # Change count to 1 if you have multiple GPUs and want to use only one.
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]

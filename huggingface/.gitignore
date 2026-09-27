@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+rag_env*/
+
+# Model cache (sentence-transformers downloads these at runtime)
+.cache/
+models/
+
+# Logs
+*.json
+
+# Mac
+.DS_Store
+
+# HF Space — docs are uploaded at runtime, not stored in repo
+docs/
+chroma_db/

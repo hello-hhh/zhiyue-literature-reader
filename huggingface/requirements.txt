@@ -1,0 +1,15 @@
+gradio==5.23.0
+rank_bm25>=0.2.0
+chromadb==0.5.23
+requests>=2.28.0
+pymupdf>=1.23.0
+python-docx>=0.8.11
+openpyxl>=3.1.0
+xlrd>=2.0.1
+python-pptx>=0.6.21
+beautifulsoup4>=4.11.0
+lxml>=4.9.0
+sentence-transformers>=2.2.0,<4.0
+huggingface_hub>=0.27.0,<1.0
+duckduckgo-search>=6.2.0,<7.0.0   # use backend='lite' to avoid rate limits
+curl-cffi>=0.7.0,<1.0.0            # required by duckduckgo-search v6

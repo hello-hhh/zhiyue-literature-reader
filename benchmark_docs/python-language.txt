@@ -1,0 +1,30 @@
+Python was created by Guido van Rossum and first released in 1991.
+Python is an interpreted, high-level, general-purpose programming language.
+Python emphasizes code readability and uses significant indentation.
+Python supports multiple programming paradigms including procedural, object-oriented, and functional programming.
+Python is dynamically typed, meaning variable types are determined at runtime.
+Python uses garbage collection for automatic memory management.
+The Python Package Index (PyPI) hosts over 400,000 packages as of 2024.
+Python's standard library is called "batteries included" because it covers a wide range of tasks.
+Python 2 reached end-of-life on January 1, 2020.
+Python 3 was released in December 2008 and introduced breaking changes from Python 2.
+Python uses indentation (whitespace) instead of braces to define code blocks.
+List comprehensions in Python allow creating lists in a single readable line.
+Python generators use the yield keyword to produce values lazily, one at a time.
+Python decorators are functions that modify the behavior of another function.
+Python's GIL (Global Interpreter Lock) prevents true parallel execution of Python threads.
+NumPy is a Python library for numerical computing with support for large arrays and matrices.
+Pandas is a Python library for data manipulation and analysis built on top of NumPy.
+Django and Flask are the two most popular Python web frameworks.
+Python f-strings (formatted string literals) were introduced in Python 3.6.
+Python dictionaries maintain insertion order since Python 3.7.
+The zip() function in Python combines two or more iterables into tuples.
+Python's enumerate() function returns both index and value when iterating.
+Python lambda functions are anonymous, single-expression functions.
+Python's map() and filter() functions apply a function to an iterable.
+Python supports multiple inheritance — a class can inherit from more than one parent class.
+Python's __init__ method is the constructor called when a new object is created.
+Python's __str__ method defines how an object is printed as a string.
+Python virtual environments isolate project dependencies from the system Python installation.
+pip is the standard package manager for Python, standing for "Pip Installs Packages".
+Python's asyncio library enables writing concurrent code using async and await syntax.

@@ -1,0 +1,7 @@
+[tool.pytest.ini_options]
+pythonpath = ["."]
+filterwarnings = [
+    # PyMuPDF uses SWIG C extensions that lack __module__ on Python 3.11+.
+    # This is a third-party library issue — not fixable in our code.
+    "ignore:builtin type.*has no __module__:DeprecationWarning",
+]

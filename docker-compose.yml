@@ -1,0 +1,90 @@
+# docker-compose.yml — RAG Agent full stack (app + Ollama).
+#
+# Starts two services:
+#   ollama  — local LLM server (embeddings + language model)
+#   app     — RAG Agent Streamlit web UI
+#
+# Usage:
+#   1. Pull models (one-time, ~2.3 GB):
+#        docker compose run --rm ollama ollama pull hf.co/CompendiumLabs/bge-base-en-v1.5-gguf
+#        docker compose run --rm ollama ollama pull hf.co/bartowski/Llama-3.2-3B-Instruct-GGUF
+#
+#   2. Start the full stack:
+#        docker compose up
+#
+#   3. Open http://localhost:8501 in your browser.
+#
+# GPU support (NVIDIA):
+#   docker compose -f docker-compose.yml -f docker-compose.gpu.yml up
+#
+# Stop:
+#   docker compose down
+#
+# Stop and remove all data (ChromaDB, uploaded docs):
+#   docker compose down -v
+
+services:
+
+  # ── Ollama ─────────────────────────────────────────────────────────────────
+  # Runs the local LLM and embedding model. The app communicates with it over
+  # the internal Docker network on port 11434.
+  ollama:
+    image: ollama/ollama:latest
+    container_name: rag-ollama
+    volumes:
+      # Persist downloaded models so they survive container restarts.
+      # Without this volume, models would be re-downloaded on every `docker compose up`.
+      - ollama_models:/root/.ollama
+    ports:
+      # Expose Ollama on the host so you can also run `ollama pull` from your terminal.
+      - "11434:11434"
+    restart: unless-stopped
+    healthcheck:
+      # Wait until Ollama is accepting requests before starting the app.
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  # ── RAG Agent app ──────────────────────────────────────────────────────────
+  # Streamlit web UI. Waits for Ollama to be healthy before starting.
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rag-app
+    depends_on:
+      ollama:
+        condition: service_healthy
+    environment:
+      # Point the app at the Ollama service using Docker's internal DNS.
+      # The ollama Python client reads OLLAMA_HOST automatically.
+      - OLLAMA_HOST=http://ollama:11434
+      # Allow overriding ChromaDB and docs paths via environment variables.
+      - RAG_CHROMA_DIR=/app/chroma_db
+      - RAG_DOCS_ROOT=/app/docs
+    ports:
+      - "8501:8501"
+    volumes:
+      # Persist the ChromaDB vector index between restarts so documents
+      # do not need to be re-indexed every time the container starts.
+      - chroma_data:/app/chroma_db
+      # Mount the docs folder so you can add documents without rebuilding the image.
+      # Place files in ./docs/ on your host and they appear inside the container.
+      - ./docs:/app/docs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+# ── Named volumes ──────────────────────────────────────────────────────────────
+# Docker manages these volumes. They persist until `docker compose down -v`.
+volumes:
+  ollama_models:
+    driver: local
+  chroma_data:
+    driver: local

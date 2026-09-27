@@ -1,0 +1,55 @@
+# .dockerignore — files excluded from the Docker build context.
+#
+# Excluding large or irrelevant directories keeps the build context small,
+# which speeds up `docker build` significantly.
+
+# Virtual environment — dependencies are installed inside the image via pip
+rag_env_311/
+
+# ChromaDB — mounted as a named volume at runtime, not baked into the image
+chroma_db/
+
+# User documents — mounted as a bind mount at runtime
+docs/
+
+# Test infrastructure — not needed inside the production image
+tests/
+huggingface/
+benchmark_docs/
+test_docs/
+create_test_docs.py
+
+# Benchmark output files — generated at runtime, not needed in the image
+benchmark_results.json
+benchmark_results.csv
+tool_benchmark_results.json
+
+# Logs — generated at runtime
+rag_logs.json
+debug.log
+*.log
+
+# Git and CI metadata
+.git/
+.github/
+.gitignore
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Obsolete code
+obsolete/
