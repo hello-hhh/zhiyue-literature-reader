@@ -1,0 +1,27 @@
+name: Unpack uploaded source
+
+on:
+  push:
+    paths:
+      - "zhiyue-literature-reader.zip"
+
+permissions:
+  contents: write
+
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unpack project source
+        shell: bash
+        run: |
+          unzip -q zhiyue-literature-reader.zip -d unpacked
+          cp -a unpacked/zhiyue-literature-reader/. .
+          rm -rf unpacked zhiyue-literature-reader.zip
+          rm -f .github/workflows/test.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "chore: unpack project source"
+          git push
